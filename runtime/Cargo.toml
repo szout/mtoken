@@ -63,6 +63,11 @@ version = '3.0.0'
 optional = true
 version = '0.3.1'
 
+[dependencies.pallet-assets]
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+branch = 'rococo-v1'
+
 [dependencies.pallet-balances]
 default-features = false
 git = 'https://github.com/paritytech/substrate.git'
@@ -103,7 +108,7 @@ version = '3.0.0'
 default-features = false
 git = 'https://github.com/paritytech/substrate.git'
 branch = 'rococo-v1'
-version = '3.0.0'
+#version = '3.0.0'
 
 [dependencies.pallet-democracy]
 default-features = false
@@ -207,15 +212,17 @@ git = 'https://github.com/paritytech/substrate.git'
 branch = 'rococo-v1'
 version = '3.0.0'
 
-[dependencies.template]
+[dependencies.pallet-template]
 default-features = false
-package = 'pallet-template'
 path = '../pallets/template'
 
-[dependencies.bridge]
+[dependencies.pallet-gateway]
 default-features = false
-package = 'pallet-bridge'
-path = '../pallets/bridge'
+path = '../pallets/gateway'
+
+[dependencies.pallet-price-fetch]
+default-features = false
+path = '../pallets/price-fetch'
 
 #---------------------------------------------
 # evm & ethereum
@@ -240,25 +247,6 @@ default-features = false
 path = '../primitives/rpc'
 
 #---------------------------------------------
-# orml
-#---------------------------------------------
-[dependencies.orml-tokens]
-default-features = false
-path = '../orml/tokens'
-
-[dependencies.orml-traits]
-default-features = false
-path = '../orml/traits'
-
-[dependencies.orml-nft]
-default-features = false
-path = '../orml/nft'
-
-[dependencies.fp-currency]
-default-features = false
-path = '../primitives/currency'
-
-#---------------------------------------------
 # Cumulus dependencies
 #---------------------------------------------
 [dependencies.parachain-info]
@@ -277,7 +265,7 @@ git = 'https://github.com/paritytech/cumulus.git'
 branch = 'rococo-v1'
 default-features = false
 
-[dependencies.cumulus-primitives-utility]
+[dependencies.cumulus-pallet-xcm]
 git = 'https://github.com/paritytech/cumulus.git'
 branch = 'rococo-v1'
 default-features = false
@@ -287,10 +275,38 @@ git = 'https://github.com/paritytech/cumulus.git'
 branch = 'rococo-v1'
 default-features = false
 
-[dependencies.cumulus-pallet-xcm]
+[dependencies.cumulus-primitives-utility]
 git = 'https://github.com/paritytech/cumulus.git'
 branch = 'rococo-v1'
 default-features = false
+
+[dependencies.pallet-xcm]
+git = 'https://github.com/paritytech/polkadot'
+branch = 'rococo-v1'
+default-features = false
+
+#---------------------------------------------
+# orml
+#---------------------------------------------
+[dependencies.orml-tokens]
+default-features = false
+path = '../orml/tokens'
+
+[dependencies.orml-traits]
+default-features = false
+path = '../orml/traits'
+
+[dependencies.orml-nft]
+default-features = false
+path = '../orml/nft'
+
+[dependencies.orml-currencies]
+default-features = false
+path = '../orml/currencies'
+
+[dependencies.fp-currency]
+default-features = false
+path = '../primitives/currency'
 
 #---------------------------------------------
 # Polkadot dependencies
@@ -325,6 +341,7 @@ runtime-benchmarks = [
     'hex-literal',
     'frame-system/runtime-benchmarks',
     'pallet-balances/runtime-benchmarks',
+    'pallet-assets/runtime-benchmarks',
     'pallet-timestamp/runtime-benchmarks',
 ]
 std = [
@@ -345,6 +362,7 @@ std = [
 	"frame-support/std",
 	"frame-executive/std",
 	"frame-system/std",
+        "pallet-assets/std",
 	"pallet-balances/std",
 	"pallet-randomness-collective-flip/std",
 	"pallet-timestamp/std",
@@ -354,16 +372,22 @@ std = [
         "pallet-democracy/std",
         "pallet-scheduler/std",
         "pallet-elections-phragmen/std",
-        "bridge/std",
+        "pallet-template/std",
+        "pallet-gateway/std",
+        "pallet-price-fetch/std",
         "pallet-evm/std",
         "pallet-evm-precompile-simple/std",
         "pallet-contracts/std",
         "pallet-contracts-primitives/std",
         "pallet-contracts-rpc-runtime-api/std",
-	"cumulus-pallet-parachain-system/std",
-	"cumulus-primitives-core/std",
-	"xcm/std",
-	"xcm-builder/std",
-	"xcm-executor/std",
+        "cumulus-pallet-parachain-system/std",
+        "cumulus-primitives-core/std",
+        "xcm/std",
+        "xcm-builder/std",
+        "xcm-executor/std",
+        "cumulus-pallet-xcm/std",
+        "cumulus-pallet-xcmp-queue/std",
+        "cumulus-primitives-utility/std",
+
 
 ]

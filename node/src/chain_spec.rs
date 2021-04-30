@@ -5,12 +5,11 @@ use hex_literal::hex;
 use serde::{Deserialize, Serialize};
 use sp_core::{Pair, Public, sr25519, H160, U256 };
 use parachain_runtime::{DOLLARS,AccountId, Signature, SchedulerConfig, 
-                        DemocracyConfig, EVMConfig, EthereumConfig, 
-                        ContractsConfig,ElectionsConfig,TokensConfig,NFTConfig};
+                        DemocracyConfig, EVMConfig, EthereumConfig,TokensConfig, 
+                        ContractsConfig, ElectionsConfig, NFTConfig};
 use sp_runtime::traits::{IdentifyAccount, Verify};
 use std::collections::BTreeMap;
 use std::str::FromStr;
-
 use fp_currency::currency::{ELP,DOT,BTC};
 
 /// Specialized `ChainSpec` for the normal parachain runtime.
@@ -84,7 +83,7 @@ pub fn local_testnet_config(id: ParaId) -> ChainSpec {
         let mut properties = Properties::new();
         properties.insert("ss58Format".into(), "42".into());
         properties.insert("tokenSymbol".into(), "PNX".into());
-        properties.insert("tokenDecimals".into(), 12.into());
+        properties.insert("tokenDecimals".into(), 18.into());
 
 	ChainSpec::from_genesis(
 		// Name
@@ -109,8 +108,8 @@ pub fn local_testnet_config(id: ParaId) -> ChainSpec {
 					get_account_id_from_seed::<sr25519::Public>("Dave//stash"),
 					get_account_id_from_seed::<sr25519::Public>("Eve//stash"),
 					get_account_id_from_seed::<sr25519::Public>("Ferdie//stash"),
-                                        hex!["24e20fbe75cda2f79e9e2fc522408520b64a6adf9532cff0917dd59da114e372"].into(),
-                                        hex!["623d43e2a8b03e116b33cbaae36b36d2d30a3b0280af755228184431b9f2c930"].into(),
+                                        hex!["c2cdcf01af7163d2d99b2ec87954e4c1b735e9e9ea80f8775bf29dd9457eaca1"].into(),
+                                        hex!["0d6d2fcaed2f2ccd5c1d5c86468490f2aafeec8b7cb14af512cdf8c7980183a3"].into(),
 				],
 				id,
 			)
@@ -133,7 +132,9 @@ fn testnet_genesis(
 ) -> parachain_runtime::GenesisConfig {
         // add by WangYi
         const STASH: u128 = 20_000 * DOLLARS;
-        const ENDOWMENT: u128 = 1_000_000 * DOLLARS;
+        const ENDOWMENT: u128 = 30_000 * DOLLARS;
+        const ETH_BALANCE: u128 = 500_000 * DOLLARS;
+
         let num_endowed_accounts = endowed_accounts.len();
 
         let gerald_evm_account_id = H160::from_str("6be02d1d3665660d22ff9624b7be0551ee1ac91b").unwrap();
@@ -142,7 +143,7 @@ fn testnet_genesis(
                 gerald_evm_account_id,
                 pallet_evm::GenesisAccount {
                         nonce: 0.into(),
-                        balance: U256::from(3_000_000_000_000_000_000u128),
+                        balance: U256::from(ETH_BALANCE),
                         storage: BTreeMap::new(),
                         code: vec![],
                 },
@@ -186,16 +187,16 @@ fn testnet_genesis(
                 },
 
                 orml_tokens: TokensConfig {
-			endowed_accounts: endowed_accounts.iter()
-				.flat_map(|x| {
-					vec![
-						(x.clone(), ELP, 1_000_000 * DOLLARS),
-						(x.clone(), DOT, 1_000_000 * DOLLARS),
-						(x.clone(), BTC, 1_000_000 * DOLLARS),
-					]
-				})
-				.collect(),
-		},
+                        endowed_accounts: endowed_accounts.iter()
+                                .flat_map(|x| {
+                                        vec![
+                                                (x.clone(), ELP, 1_000_000 * DOLLARS),
+                                                (x.clone(), DOT, 1_000_000 * DOLLARS),
+                                                (x.clone(), BTC, 1_000_000 * DOLLARS),
+                                        ]
+                                })
+                                .collect(),
+                },
 
                 orml_nft: NFTConfig { tokens: vec![] },
 	}

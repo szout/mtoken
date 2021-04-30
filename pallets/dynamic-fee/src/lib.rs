@@ -126,6 +126,8 @@ impl<T: Config> ProvideInherent for Module<T> {
 		Some(Call::note_min_gas_price_target(target))
 	}
 
+        //fn is_inherent(_call: &Self::Call) -> bool { true }
+
 	fn check_inherent(_call: &Self::Call, _data: &InherentData) -> result::Result<(), Self::Error> {
 		Ok(())
 	}

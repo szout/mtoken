@@ -5,6 +5,10 @@ std = [
     'frame-support/std',
     'frame-system/std',
 ]
+
+[dependencies]
+log = { version = "0.4.14", default-features = false }
+
 [dependencies.codec]
 default-features = false
 features = ['derive']
@@ -43,6 +47,11 @@ default-features = false
 git = 'https://github.com/paritytech/substrate.git'
 branch = 'rococo-v1'
 version = '3.0.0'
+
+[dependencies.pallet-assets]
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+branch = 'rococo-v1'
 
 [package]
 authors = ['Anonymous']

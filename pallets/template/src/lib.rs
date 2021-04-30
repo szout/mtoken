@@ -56,7 +56,14 @@ pub mod pallet {
 	}
 
 	#[pallet::hooks]
-	impl<T: Config> Hooks<BlockNumberFor<T>> for Pallet<T> {}
+	impl<T: Config> Hooks<BlockNumberFor<T>> for Pallet<T> {
+           fn offchain_worker(block_number: T::BlockNumber) {
+              let parent_hash = <frame_system::Pallet<T>>::block_hash(block_number - 1u32.into());
+              log::info!("Current block: {:?} (parent hash: {:?})", block_number, parent_hash);
+              //let oo = <pallet_assets::Pallet<T>>::total_supply(0);
+              //log::info!("assets balance: {:?} ", oo);
+           }
+        }
 
 	// Dispatchable functions allows users to interact with the pallet and invoke state changes.
 	// These functions materialize as "extrinsics", which are often compared to transactions.

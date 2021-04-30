@@ -30,6 +30,7 @@ evm = { version = "0.24.0", default-features = false, features = ["with-codec"] 
 evm-runtime = { version = "0.23.0", default-features = false }
 evm-gasometer = { version = "0.23.0", default-features = false }
 sha3 = { version = "0.8", default-features = false }
+log = { version = "0.4.14", default-features = false }
 
 [features]
 default = ["std"]

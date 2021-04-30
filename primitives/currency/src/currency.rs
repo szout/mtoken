@@ -116,9 +116,10 @@ create_currency_id! {
 	#[cfg_attr(feature = "std", derive(Serialize, Deserialize))]
 	#[repr(u8)]
 	pub enum TokenSymbol {
-		ELP("EverLasting", 12) = 0,
-		DOT("Polkadot", 10) = 1,
-		BTC("BTC", 8) = 2,
+		PNX("Phoenix", 12) = 0,
+		ELP("EverLasting", 12) = 1,
+		DOT("Polkadot", 10) = 2,
+		BTC("BTC", 8) = 3,
 	}
 }
 

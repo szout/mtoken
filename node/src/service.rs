@@ -103,7 +103,9 @@ pub fn new_partial(
 
         // auto register offchain key, add by WangYi
         let keystore = keystore_container.sync_keystore();
-        SyncCryptoStore::sr25519_generate_new(&*keystore, bridge::KEY_TYPE, Some("//Alice"))
+        //SyncCryptoStore::sr25519_generate_new(&*keystore, pallet_gateway::KEY_TYPE, Some("//Alice"))
+        //              .expect("Creating key with account Alice should succeed.");
+        SyncCryptoStore::sr25519_generate_new(&*keystore, pallet_price_fetch::KEY_TYPE, Some("//Alice"))
                        .expect("Creating key with account Alice should succeed.");
 
 

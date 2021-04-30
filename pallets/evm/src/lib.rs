@@ -556,9 +556,11 @@ impl<T: Config> Module<T> {
 	/// Get the account basic in EVM format.
 	pub fn account_basic(address: &H160) -> Account {
 		let account_id = T::AddressMapping::into_account_id(*address);
+log::info!("address: {:?} account_id: {:?}", address,account_id);
 
 		let nonce = frame_system::Pallet::<T>::account_nonce(&account_id);
 		let balance = T::Currency::free_balance(&account_id);
+log::info!("nonce: {:?} balance: {:?}", nonce,balance);
 
 		Account {
 			nonce: U256::from(UniqueSaturatedInto::<u128>::unique_saturated_into(nonce)),

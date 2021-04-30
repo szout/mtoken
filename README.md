@@ -1,4 +1,4 @@
-# Phoenix Parachain MultiToken Support
+# Phoenix Parachain
   Phoenix Paranchain base in rococo-v1, buildin contracts supports. 
 This contracts interface supports Substrate 3.0 with contracts using Ink! 3.0.
  suport EVM & Ethereum API
@@ -11,16 +11,21 @@ include pallets list:
    cumulus_parachain_system
    pallet_transaction_payment
    parachain_info
+   xcm_handler
    pallet_evm
    pallet_ethereum
    pallet_contracts
    pallet_scheduler
    pallet_democracy
    pallet_elections_phragmen 
-   offchain worker
-   orml-traits]
-   orml-tokens]
-   orml-nft]
+   pallet_offchain_worker
+   pallet_price_fetch
+
+   orml-tokens
+   orml-traits
+   orml-nft
+   orml-currencies
+
 ```
 
 ## Build & Run
@@ -30,7 +35,7 @@ include pallets list:
 ```bash
 # Compile Polkadot with the real overseer feature
 git clone -b rococo-v1 https://github.com/paritytech/polkadot
-cargo build --release --features=real-overseer
+cargo build --release 
 
 # Generate a raw chain spec
 ./target/release/polkadot \
@@ -41,19 +46,31 @@ cargo build --release --features=real-overseer
   > rococo-local-raw.json
 
 # Alice
-./target/release/polkadot \
+../polkadot/target/release/polkadot \
+  --base-path ../data/rococo-relay1 \
   --chain rococo-local-raw.json \
+  --rpc-methods Unsafe \
+  --ws-port 9944 \
+  --validator \
   --alice \
-  --tmp \
-  > relayA.out 2>&1 &
+  --port 50556 \
+  --ws-external \
+  --rpc-external \
+  --rpc-cors all \
+>../log/relayA.out 2>&1 &
+
+sleep 1
 
 # Bob
-./target/release/polkadot \
+../polkadot/target/release/polkadot \
+  --base-path ../data/rococo-relay2 \
   --chain rococo-local-raw.json \
-  --bob \
-  --tmp \
-  --port 30334 \
-  > relayB.out 2>&1 &
+  --ws-port 9943 \
+  --validator \
+   --bob \
+  --port 50555 \
+>../log/relayB.out 2>&1 &
+
 ```
 
 ### Launch the Phoenix Parachain
@@ -66,7 +83,7 @@ cargo build --release
 # Export genesis state
 ./target/release/phoenix-collator \
   export-genesis-state \
-  --parachain-id 200 \
+  --parachain-id 6806 \
   > genesis-state
 
 # Export genesis wasm
@@ -75,47 +92,47 @@ cargo build --release
   > genesis-wasm
 
 # Collator1
-./target/release/phoenix-collator \
+../phoenix/target/release/phoenix-collator \
   --collator \
-  --tmp \
-  --parachain-id 200 \
+  --base-path ../data/phoenix-c1 \
+  --parachain-id 6806 \
+  --chain phoenix-raw.json \
+  --rpc-methods Unsafe \
+  --ws-external \
+  --rpc-external \
+  --rpc-cors all \
+  --ws-port 9966 \
+  --rpc-port 9955 \
   --port 40335 \
-  --ws-port 9946 \
   -- \
   --execution wasm \
-  --chain ../polkadot/rococo-local-raw.json \
-  --port 30335 \
-  > Collator1.out 2>&1 &
+  --chain rococo-local-raw.json \
+  --port 30335
+> ../log/Collator1.out 2>&1 &
 
-# Collator2
-./target/release/phoenix-collator \ 
-  --collator \  
-  --tmp \ 
-  --parachain-id 200 \ 
-  --port 40336 \ 
-  --ws-port 9947 \ 
-  -- \ 
-  --execution wasm \ 
-  --chain ../polkadot/rococo-local-raw.json \ 
-  --port 30336 \ 
-  > Collator2.out 2>&1 &
-
-# Parachain Full Node
-./target/release/phoenix-collator \
-  --tmp \
-  --parachain-id 200 \
-  --port 40337 \
-  --ws-port 9948 \
-  -- \
-  --execution wasm \
-  --chain ../polkadot/rococo-local-raw.json \
-  --port 30337 \
-  > FullNode.out 2>&1 &
 ```
 ### Register the phoenix parachain
 ```bash
 # polkadot.js UI 
 https://polkadot.js.org/apps/?rpc=ws://127.0.0.1:9944
+
+Use the Settings > Developer app and add the necessary types to the UI.
+{
+  "Address": "MultiAddress",
+  "LookupSource": "MultiAddress",
+  "CurrencyId": {
+    "_enum": [
+      "Native",
+      "DOT",
+      "KSM",
+      "BTC"
+    ]
+  },
+  "CurrencyIdOf": "CurrencyId",
+  "Amount": "i128",
+  "AmountOf": "Amount",
+  "ClassId": "u64"
+}
 
 UI menu level
 sudo
@@ -123,7 +140,7 @@ sudo
     sudoScheduleParaInitialize(id, genesis)
 
 input items:
-            id <- 200
+            id <- 6806 
    genesisHead <- genesis-state(above)
 validationCode <- genesis-wasm (above)
      parachain <- true
